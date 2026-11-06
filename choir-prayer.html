@@ -6,16 +6,18 @@
 <meta name="theme-color" content="#f8f7f4">
 <title>성가대를 위한 기도</title>
 <style>
-:root{--fs:19px}*{box-sizing:border-box}
+:root{--fs:19px;color-scheme:light}
+*{box-sizing:border-box}
 body{margin:0;background:#f8f7f4;color:#242522;font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif}
-.tools{position:sticky;top:0;z-index:2;background:#fff;display:flex;justify-content:flex-end;gap:8px;padding:8px 12px;border-bottom:1px solid #eee}
+.tools{position:relative;z-index:2;background:#fff;display:flex;justify-content:flex-end;gap:8px;padding:8px 12px}
 .tools button{min-width:48px;min-height:40px;font-size:15px;border:1px solid #ddd;background:#fff;border-radius:8px;padding:8px 14px;cursor:pointer}
-header{background:#fff;border-bottom:1px solid #e7e5df;padding:23px 18px;text-align:center}
+header{background:#fff;border-bottom:1px solid #e7e5df;padding:15px 18px;text-align:center}
 h1{font-size:25px;margin:0}
-main{max-width:720px;min-height:calc(100dvh - 130px);margin:auto;background:#fff;padding:32px 20px 50px}
+main{width:100%;max-width:none;min-height:calc(100dvh - 130px);margin:0;background:#fff;padding:25px 20px 50px}
 p{font-size:var(--fs);line-height:1.85;letter-spacing:-.035em;word-break:keep-all;overflow-wrap:break-word;margin:0 0 28px}
 p:last-child{margin-bottom:0}
-@media(min-width:740px){main{padding-left:45px;padding-right:45px}}
+@media(min-width:740px){main{padding-left:32px;padding-right:32px}}
+@media(max-width:480px){main{padding-left:18px;padding-right:18px}}
 @media(max-width:370px){main{padding-left:16px;padding-right:16px}}
 </style>
 </head>
@@ -28,6 +30,40 @@ p:last-child{margin-bottom:0}
 <p>저희들은 상처입은 많은 이들을 대신하여<br>성가대의 소명을 입었음을 잊지 말게 하시어<br>항상 영롱하고 아름다운 소리와<br>장엄하고 열정이 넘치는 가슴으로<br>노래하게 하소서</p>
 <p>작은 새의 지저귐과 시냇물 흐르는 소리를<br>사랑하는 성가대의 공동체인 우리는<br>주님 안에서 한마음으로 노래하나이다</p>
 </main>
-<script>let size=19;function change(n){size=Math.max(16,Math.min(27,size+n));document.documentElement.style.setProperty('--fs',size+'px')}</script>
+<script>
+let size=19;
+function change(n){size=Math.max(16,Math.min(27,size+n));document.documentElement.style.setProperty('--fs',size+'px')}
+/* 통합PWA 기도문 뷰어와 스크롤 위치 연동 */
+(function(){
+ const KEY='pungmu_choir_prayer_scroll_v2';
+ let savedY=0,restoring=false,suspended=false;
+ try{savedY=Number(sessionStorage.getItem(KEY))||0}catch(e){}
+ function currentY(){return Math.max(0,window.scrollY||document.documentElement.scrollTop||document.body.scrollTop||0)}
+ function capture(){
+   if(restoring||suspended)return;
+   const y=currentY();
+   if(y===0&&savedY>0)return;
+   savedY=y;
+   try{sessionStorage.setItem(KEY,String(savedY))}catch(e){}
+ }
+ function restore(y){
+   const target=Math.max(0,Number(y??savedY)||0);
+   restoring=true;
+   const go=()=>window.scrollTo({top:target,left:0,behavior:'instant'});
+   requestAnimationFrame(()=>{go();requestAnimationFrame(go)});
+   setTimeout(go,100);
+   setTimeout(()=>{go();restoring=false},350);
+ }
+ function notify(){try{window.parent.postMessage({type:'PUNGMU_PRAYER_SCROLL',y:savedY},'*')}catch(e){}}
+ window.addEventListener('scroll',()=>{capture();notify()},{passive:true});
+ window.addEventListener('pagehide',()=>{capture();notify()});
+ window.addEventListener('message',e=>{
+   const d=e.data||{};
+   if(d.type==='PUNGMU_PRAYER_SAVE'){capture();suspended=true;notify()}
+   if(d.type==='PUNGMU_PRAYER_RESTORE'){suspended=false;restore(Math.max(savedY,Number(d.y)||0))}
+ });
+ window.addEventListener('load',()=>restore(savedY));
+})();
+</script>
 </body>
 </html>
