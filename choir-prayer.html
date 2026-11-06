@@ -13,7 +13,7 @@ body{margin:0;background:#f8f7f4;color:#242522;font-family:system-ui,-apple-syst
 .tools button{min-width:48px;min-height:40px;font-size:15px;border:1px solid #ddd;background:#fff;border-radius:8px;padding:8px 14px;cursor:pointer}
 header{background:#fff;border-bottom:1px solid #e7e5df;padding:15px 18px;text-align:center}
 h1{font-size:25px;margin:0}
-main{width:100%;max-width:none;min-height:calc(100dvh - 130px);margin:0;background:#fff;padding:25px 20px 50px}
+main{width:100%;max-width:none;min-height:calc(100dvh + 180px);margin:0;background:#fff;padding:25px 20px 55px}
 p{font-size:var(--fs);line-height:1.85;letter-spacing:-.035em;word-break:keep-all;overflow-wrap:break-word;margin:0 0 28px}
 p:last-child{margin-bottom:0}
 @media(min-width:740px){main{padding-left:32px;padding-right:32px}}
@@ -25,17 +25,17 @@ p:last-child{margin-bottom:0}
 <div class="tools"><button type="button" aria-label="글자 축소" onclick="change(-1)">가−</button><button type="button" aria-label="글자 확대" onclick="change(1)">가+</button></div>
 <header><h1>성가대를 위한 기도</h1></header>
 <main>
-<p>빛과 사랑으로 세상을 창조하신 천주여<br>크신 은총 표현할 길 없사오나<br>찬송과 영광 바치려 저희가 모였사오니<br>미약한 정성 받아들이소서</p>
-<p>저희들의 노래가 풍성하고 만족한<br>미사의 제물이 되고<br>공동체를 이루는 끈이 되게 하소서</p>
-<p>저희들은 상처입은 많은 이들을 대신하여<br>성가대의 소명을 입었음을 잊지 말게 하시어<br>항상 영롱하고 아름다운 소리와<br>장엄하고 열정이 넘치는 가슴으로<br>노래하게 하소서</p>
-<p>작은 새의 지저귐과 시냇물 흐르는 소리를<br>사랑하는 성가대의 공동체인 우리는<br>주님 안에서 한마음으로 노래하나이다</p>
+<p>빛과 사랑으로 세상을 창조하신 천주여 크신 은총 표현할 길 없사오나 찬송과 영광 바치려 저희가 모였사오니 미약한 정성 받아들이소서</p>
+<p>저희들의 노래가 풍성하고 만족한 미사의 제물이 되고 공동체를 이루는 끈이 되게 하소서</p>
+<p>저희들은 상처입은 많은 이들을 대신하여 성가대의 소명을 입었음을 잊지 말게 하시어 항상 영롱하고 아름다운 소리와 장엄하고 열정이 넘치는 가슴으로 노래하게 하소서</p>
+<p>작은 새의 지저귐과 시냇물 흐르는 소리를 사랑하는 성가대의 공동체인 우리는 주님 안에서 한마음으로 노래하나이다</p>
 </main>
 <script>
 let size=19;
 function change(n){size=Math.max(16,Math.min(27,size+n));document.documentElement.style.setProperty('--fs',size+'px')}
-/* 통합PWA 기도문 뷰어와 스크롤 위치 연동 */
+/* V3: 자연 줄바꿈, 충분한 스크롤 공간, 통합PWA 스크롤 연동 */
 (function(){
- const KEY='pungmu_choir_prayer_scroll_v2';
+ const KEY='pungmu_choir_prayer_scroll_v3';
  let savedY=0,restoring=false,suspended=false;
  try{savedY=Number(sessionStorage.getItem(KEY))||0}catch(e){}
  function currentY(){return Math.max(0,window.scrollY||document.documentElement.scrollTop||document.body.scrollTop||0)}
